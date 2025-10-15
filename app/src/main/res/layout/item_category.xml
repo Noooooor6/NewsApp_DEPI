@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/view"
+    android:id="@+id/CardView"
     android:layout_width="match_parent"
     android:layout_height="190dp"
     android:layout_margin="8dp"
     android:padding="8dp"
     app:cardCornerRadius="24dp"
-    app:layout_constraintTop_toTopOf="parent">
+    app:layout_constraintTop_toTopOf="parent"
+    app:strokeColor="@color/white"
+    app:strokeWidth="2dp"
+    app:cardBackgroundColor="@color/red"
+    app:useCompatPadding="true"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,6 +27,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:src="@drawable/politics" />
+
 
         <TextView
             android:id="@+id/category_name"

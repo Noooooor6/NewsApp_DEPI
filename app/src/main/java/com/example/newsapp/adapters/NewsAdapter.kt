@@ -9,7 +9,7 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.example.newsapp.Article
+import com.example.newsapp.api.Article
 import com.example.newsapp.R
 import com.example.newsapp.databinding.ArticleListItemBinding
 
@@ -42,7 +42,7 @@ class NewsAdapter(val a: Activity, val articles: ArrayList<Article>) :
 
         holder.binding.articleContainer.setOnClickListener {
 
-            val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+            val intent = Intent(Intent.ACTION_VIEW, url?.toUri())
             a.startActivity(intent)
         }
 

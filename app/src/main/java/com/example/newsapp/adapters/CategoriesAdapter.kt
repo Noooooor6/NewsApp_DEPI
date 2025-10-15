@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.newsapp.databinding.ItemCategoryBinding
 import com.example.newsapp.model.CategoryModel
 
-class CategoriesAdapter(var categoryModel: List<CategoryModel?>) :
+class CategoriesAdapter(var categoryModel: List<CategoryModel?>, var onItemClickListener: (CategoryModel) -> Unit) :
     Adapter<CategoriesAdapter.categoryViewHolder>() {
-    class categoryViewHolder(var binding: ItemCategoryBinding) : ViewHolder(binding.root)
+    class categoryViewHolder(val binding: ItemCategoryBinding) : ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): categoryViewHolder {
         val binding =
@@ -26,11 +26,15 @@ class CategoriesAdapter(var categoryModel: List<CategoryModel?>) :
         val category = categoryModel[position]
         holder.binding.categoryName.text = category?.title
         holder.binding.categoryImage.setImageResource(category!!.imageId)
-        holder.binding.view.setBackgroundColor(
+        holder.binding.CardView.setOnClickListener {
+            onItemClickListener.invoke(category)
+        }
+        holder.binding.CardView.setCardBackgroundColor(
             ContextCompat.getColor(
                 holder.binding.root.context,
                 category.backgroundColorId
             )
         )
+
     }
 }

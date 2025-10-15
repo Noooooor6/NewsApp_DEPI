@@ -3,12 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="@drawable/pattern"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".SignInActivity"
-
     >
+
+    <include
+        layout="@layout/appbar_temp"
+        />
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -16,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="64dp"
-        app:boxStrokeColor="@color/black"
+        app:boxStrokeColor="@color/green"
         app:boxStrokeWidthFocused="2dp">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -33,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="24dp"
-        app:boxStrokeColor="@color/black"
+        app:boxStrokeColor="@color/green"
         app:boxStrokeWidthFocused="2dp">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -50,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="24dp"
-        app:boxStrokeColor="@color/black"
+        app:boxStrokeColor="@color/green"
         app:boxStrokeWidthFocused="2dp">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -92,7 +96,9 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="36dp"
         android:text="Sign Up"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:backgroundTint="@color/green"
+        />
 
     <ProgressBar
         android:id="@+id/loader"

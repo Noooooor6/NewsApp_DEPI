@@ -41,18 +41,25 @@ class SignInActivity : AppCompatActivity() {
         }
 
         binding.forgotPassTv.setOnClickListener {
-            binding.loader.isVisible = true
-            val emailAddress = binding.EmailEdt.text.toString()
+            val emailAddress = binding.EmailEdt.text.toString().trim()
 
+            if (emailAddress.isEmpty()) {
+                Toast.makeText(this, "Please enter your email first", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            binding.loader.isVisible = true
             Firebase.auth.sendPasswordResetEmail(emailAddress)
                 .addOnCompleteListener { task ->
+                    binding.loader.isVisible = false
                     if (task.isSuccessful) {
-                        binding.loader.isVisible = false
-                        Toast.makeText(this, "Email Sent!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Email Sent!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, task.exception?.message ?: "Failed to send email", Toast.LENGTH_SHORT).show()
                     }
                 }
-
         }
+
 
     }
 
