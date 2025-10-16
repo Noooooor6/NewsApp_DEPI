@@ -15,7 +15,7 @@ import com.example.newsapp.R
 import com.example.newsapp.databinding.ArticleListItemBinding
 import com.google.firebase.firestore.FirebaseFirestore
 
-class NewsAdapter(val a: Activity, val articles: ArrayList<Article>) :
+class NewsAdapter(val a: Activity, val articles: ArrayList<Article>, val isFavouriteScreen: Boolean = false) :
     RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
     class NewsViewHolder(val binding: ArticleListItemBinding) :
@@ -57,25 +57,41 @@ class NewsAdapter(val a: Activity, val articles: ArrayList<Article>) :
         }
         holder.binding.favourite.setOnClickListener {
             val db = FirebaseFirestore.getInstance()
+            val articleUrl = articles[position].url ?: ""
+            val safeId = articleUrl.replace("/", "_").replace(":", "_").replace(".", "_")
 
-            val article = hashMapOf(
-                "title" to (articles[position].title ?: ""),
-                "description" to (articles[position].description ?: ""),
-                "urlToImage" to (articles[position].urlToImage ?: ""),
-                "url" to (articles[position].url ?: "")
-            )
+            val articleRef = db.collection("favourites").document(safeId)
 
-            db.collection("favourites")
-                .add(article)
-                .addOnSuccessListener {
-                    Toast.makeText(a, "Added to favourites ❤️", Toast.LENGTH_SHORT).show()
-                }
-                .addOnFailureListener {
-                    Toast.makeText(a, "Failed to add!", Toast.LENGTH_SHORT).show()
-                }
+            if (isFavouriteScreen) {
+                articleRef.delete()
+                    .addOnSuccessListener {
+                        Toast.makeText(a, "Removed from favourites 💔", Toast.LENGTH_SHORT).show()
+                        articles.removeAt(position)
+                        notifyItemRemoved(position)
+                        notifyItemRangeChanged(position, articles.size)
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(a, "Failed to remove!", Toast.LENGTH_SHORT).show()
+                    }
+            } else {
+                val articleData = hashMapOf(
+                    "title" to (articles[position].title ?: ""),
+                    "description" to (articles[position].description ?: ""),
+                    "urlToImage" to (articles[position].urlToImage ?: ""),
+                    "url" to articleUrl
+                )
+
+                articleRef.set(articleData)
+                    .addOnSuccessListener {
+                        Toast.makeText(a, "Added to favourites ❤️", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(a, "Failed to add!", Toast.LENGTH_SHORT).show()
+                    }
+            }
         }
-    }
 
+}
     override fun getItemCount(): Int = articles.size
 
 
