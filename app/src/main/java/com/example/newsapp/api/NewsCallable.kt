@@ -9,7 +9,7 @@ interface NewsCallable {
     @GET("v2/top-headlines")
     fun getNewsByCategory(
         @Query("category") category: String,
-        @Query("country") country: String = "us",
+        @Query("country") country: String,
         @Query("apiKey") apiKey: String = "96d7169f9d0a42cab90d303c3d289906"
     ): Call<NewsResponse>
    }

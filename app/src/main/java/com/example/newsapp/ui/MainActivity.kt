@@ -1,5 +1,6 @@
-package com.example.newsapp
+package com.example.newsapp.ui
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
+import com.example.newsapp.BaseActivity
+import com.example.newsapp.R
 import com.example.newsapp.adapters.NewsAdapter
 import com.example.newsapp.api.Article
 import com.example.newsapp.api.NewsCallable
@@ -23,7 +26,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,44 +39,12 @@ class MainActivity : AppCompatActivity() {
 
         val menuIcon = binding.root.findViewById<ImageView>(R.id.side_menu)
         menuIcon.setOnClickListener  {
-            Log.d("SIDE_MENU", "Clicked!")
-            Toast.makeText(this, "Menu clicked!", Toast.LENGTH_SHORT).show()
             if (binding.drawer.isDrawerOpen(GravityCompat.START)) {
                 binding.drawer.closeDrawer(GravityCompat.START)
             } else binding.drawer.openDrawer(GravityCompat.START)
         }
 
-        binding.navigationView.setNavigationItemSelectedListener(object :
-            OnNavigationItemSelectedListener {
-            override fun onNavigationItemSelected(item: MenuItem): Boolean {
-                when (item.itemId) {
-                    R.id.Logout -> {
-                        FirebaseAuth.getInstance().signOut()
-                        val intent = Intent(this@MainActivity, SignInActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
-                        Toast.makeText(this@MainActivity, "Logged out successfully", Toast.LENGTH_SHORT).show()
-
-                        binding.drawer.closeDrawer(GravityCompat.START)
-                        return true
-                    }
-                    R.id.sitting -> {
-                        Toast.makeText(this@MainActivity, "not implemented yet", Toast.LENGTH_SHORT)
-                            .show()
-                        binding.drawer.closeDrawer(GravityCompat.START)
-                        return true
-                    }
-                    R.id.favorites -> {
-                        Toast.makeText(this@MainActivity, "not implemented yet", Toast.LENGTH_SHORT)
-                            .show()
-                        binding.drawer.closeDrawer(GravityCompat.START)
-                        return true
-                    }
-                    else -> return true
-                }
-            }
-
-        })
+        setupNavigation(binding.navigationView, binding.drawer)
 
         binding.swipeRefresh.setOnRefreshListener {
             loadNews()
@@ -81,6 +52,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadNews() {
+        showLoader(true)
+        val prefs = getSharedPreferences("NewsPrefs", Context.MODE_PRIVATE)
+        val selectedCountry = prefs.getString("selected_country", "Egypt") ?: "Egypt"
+
+        val countryCode = when (selectedCountry) {
+            "Egypt" -> "eg"
+            "Germany" -> "de"
+            "United State" -> "us"
+            else -> "us"
+        }
         val category = intent.getStringExtra("category_name") ?: "general"
 
         val retrofit = Retrofit.Builder()
@@ -89,14 +70,14 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         val newsService = retrofit.create(NewsCallable::class.java)
-        newsService.getNewsByCategory(category).enqueue(object : Callback<NewsResponse> {
+        newsService.getNewsByCategory(category, countryCode).enqueue(object : Callback<NewsResponse> {
             override fun onResponse(call: Call<NewsResponse>, response: Response<NewsResponse>) {
                 val news = response.body()
                 val articles = news?.articles ?: arrayListOf()
                 articles.removeAll { it.title == "[Removed]" }
 
                 showNews(articles)
-                binding.loader.isVisible = false
+                showLoader(false)
                 binding.swipeRefresh.isRefreshing = false
             }
 
@@ -107,6 +88,9 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private fun showLoader(t: Boolean){
+        binding.loader.isVisible = t
+    }
     private fun showNews(articles: ArrayList<Article>) {
         val adapter = NewsAdapter(this, articles)
         binding.newsList.adapter = adapter

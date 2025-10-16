@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ShareCompat
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +13,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.newsapp.api.Article
 import com.example.newsapp.R
 import com.example.newsapp.databinding.ArticleListItemBinding
+import com.google.firebase.firestore.FirebaseFirestore
 
 class NewsAdapter(val a: Activity, val articles: ArrayList<Article>) :
     RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
@@ -52,6 +54,25 @@ class NewsAdapter(val a: Activity, val articles: ArrayList<Article>) :
                 .setType("text/plain")
                 .setText(url)
                 .startChooser()
+        }
+        holder.binding.favourite.setOnClickListener {
+            val db = FirebaseFirestore.getInstance()
+
+            val article = hashMapOf(
+                "title" to (articles[position].title ?: ""),
+                "description" to (articles[position].description ?: ""),
+                "urlToImage" to (articles[position].urlToImage ?: ""),
+                "url" to (articles[position].url ?: "")
+            )
+
+            db.collection("favourites")
+                .add(article)
+                .addOnSuccessListener {
+                    Toast.makeText(a, "Added to favourites ❤️", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(a, "Failed to add!", Toast.LENGTH_SHORT).show()
+                }
         }
     }
 

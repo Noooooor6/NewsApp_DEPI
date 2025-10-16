@@ -14,15 +14,19 @@
         android:theme="@style/Theme.NewsApp"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".CategoryActivity"
+            android:name=".ui.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".SignUpActivity"
-            android:exported="false">
-
-        </activity>
+            android:name=".ui.CategoryActivity"
+            android:exported="false" />
         <activity
-            android:name=".SignInActivity"
+            android:name=".ui.FavouriteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.SignUpActivity"
+            android:exported="false"></activity>
+        <activity
+            android:name=".ui.SignInActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,10 +35,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
-            android:exported="false">
-
-        </activity>
+            android:name=".ui.MainActivity"
+            android:exported="false"></activity>
 
         <meta-data
             android:name="preloaded_fonts"

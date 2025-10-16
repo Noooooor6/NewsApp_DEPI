@@ -58,5 +58,16 @@
             android:src="@drawable/ic_share"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/favourite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/ic_star"
+            app:layout_constraintEnd_toStartOf="@id/shared_fab"
+            app:layout_constraintTop_toTopOf="@id/shared_fab"
+            app:layout_constraintBottom_toBottomOf="@id/shared_fab"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

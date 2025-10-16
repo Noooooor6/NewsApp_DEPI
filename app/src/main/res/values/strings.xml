@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">News App</string>
     <string name="pick_your_category_of_interest">Pick your category of interest</string>
+    <string-array name="Countries">
+        <item>Egypt</item>
+        <item>Germany</item>
+        <item>United State</item>
+    </string-array>
 </resources>

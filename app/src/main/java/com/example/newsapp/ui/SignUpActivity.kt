@@ -1,4 +1,4 @@
-package com.example.newsapp
+package com.example.newsapp.ui
 
 import android.content.Intent
 import android.os.Bundle
